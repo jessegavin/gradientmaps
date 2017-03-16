@@ -38,11 +38,20 @@ module.exports = function(grunt) {
         dest: '<%= pkg.name %>.js'
       }
     },
+
+    copy: {
+      main: {
+        files: [
+          // includes files within path
+          {src: '<%= pkg.name %>.js', dest: 'dist/'}
+        ]
+      }
+    },
     
     watch: {
       js: {
         files: project.files,
-        tasks: ['concat', 'uglify']
+        tasks: ['concat', 'uglify', 'copy']
       }
     }
 
@@ -51,7 +60,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('default', ['concat', 'uglify']);
-  grunt.registerTask('build', ['concat', 'uglify']);
+  grunt.registerTask('default', ['concat', 'uglify', 'copy']);
+  grunt.registerTask('build', ['concat', 'uglify', 'copy']);
 };

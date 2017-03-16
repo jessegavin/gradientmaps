@@ -1,12 +1,13 @@
 {
   "name": "gradientmaps",
   "title": "Gradientmaps.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Adobe Systems Inc."
   },
   "contributors": [
-    "Alan Greenblatt <blatt@adobe.com> (http://blattchat.com)"
+    "Alan Greenblatt <blatt@adobe.com> (http://blattchat.com)",
+    "Jesse Gavin <jesse.gavin@gmail.com>"
   ],
   "licenses": [
     {
@@ -15,10 +16,11 @@
   ],
   "devDependencies": {
     "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-uglify": "~0.2.2",
-    "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-watch": "~0.4.4"
   }
 }

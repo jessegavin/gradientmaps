@@ -290,13 +290,36 @@ window.GradientMaps = function(scope) {
             this.addElement(doc, componentTransfer, 'feFuncG', svgns, {'type': 'table', 'tableValues': greenTableValues.trim()});
             this.addElement(doc, componentTransfer, 'feFuncB', svgns, {'type': 'table', 'tableValues': blueTableValues.trim()});
             this.addElement(doc, componentTransfer, 'feFuncA', svgns, {'type': 'table', 'tableValues': alphaTableValues.trim()});
-        
-            if (svgIsNew)
-                elem.parentElement.insertBefore(svg, elem);
-        
+
+            var isIE = this.isIE();
+
             var filterDecl = 'url(#' + filterID + ')';
-            elem.style['-webkit-filter'] = filterDecl;
-            elem.style['filter'] = filterDecl;
+
+            if (!isIE) {
+                elem.style['-webkit-filter'] = filterDecl;
+                elem.style['filter'] = filterDecl;
+            }
+
+            if (svgIsNew) {
+                elem.parentElement.insertBefore(svg, elem);
+
+                if (this.isIE()) {
+                    var rect = elem.getBoundingClientRect();
+                    this.addElement(doc, svg, 'image', svgns, {
+                        'width': elem.width, 
+                        'height': elem.height,
+                        'href': elem.src,
+                        'filter': filterDecl
+                    });
+
+                    svg.setAttribute('width', elem.width);
+                    svg.setAttribute('height', elem.height);
+                    svg.setAttribute('viewbox', '0 0 '+ elem.width +' '+ elem.height);
+
+                    elem.style._display = elem.style.display;
+                    elem.style.display = 'none';
+                }
+            }
         
             //elem.setAttribute('style', '-webkit-filter: url(#' + filterID + '); filter: url(#' + filterID + ')');
         },
@@ -317,16 +340,35 @@ window.GradientMaps = function(scope) {
                 if (filter) {
                     var svg = filter.parentElement;
                     svg.removeChild(filter);
-                    if (svg.childNodes.length <= 0) {
-                        var parent = svg.parentElement;
-                        parent.removeChild(svg);
+                }
+
+                var isIE = this.isIE();
+                if (isIE) {
+                    var image = svg.ownerDocument.querySelector('image');
+                    if (image) {
+                        svg.removeChild(image);
                     }
                 }
+
+                if (svg.childNodes.length <= 0) {
+                    var parent = svg.parentElement;
+                    parent.removeChild(svg);
+                }
+
+
                 elem.removeAttribute('data-gradientmap-filter');
                 elem.style['-webkit-filter'] = '';
                 elem.style['filter'] = '';
+                elem.style.display = '';
             }
         },
+
+        isIE: function() {
+            var ua = window.navigator.userAgent;
+            return ua.indexOf('MSIE ') > -1
+                || ua.indexOf('Trident/') > -1
+                || ua.indexOf('Edge/') > -1;
+        }
     }
     
     return new GradientMaps();
